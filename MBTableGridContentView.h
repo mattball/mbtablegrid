@@ -28,7 +28,7 @@
 #define MBTableGridColumnHeaderHeight 19.0
 #define MBTableGridRowHeaderWidth 40.0
 
-@class MBTableGrid;
+@class MBTableGrid, MBTableGridCell;
 
 /**
  * @brief		\c MBTableGridContentView provides the actual display
@@ -50,6 +50,8 @@
 	NSTimer *autoscrollTimer;
 	
 	BOOL isDraggingColumnOrRow;
+	
+	MBTableGridCell *_cell;
 }
 
 /**

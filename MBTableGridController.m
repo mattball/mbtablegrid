@@ -33,18 +33,18 @@
 
 - (void)awakeFromNib 
 {
-	columns = [[NSMutableArray alloc] initWithCapacity:10];
+	columns = [[NSMutableArray alloc] initWithCapacity:500];
 	
 	// Add 5 columns
 	int i = 0;
-	while (i < 5) {
+	while (i < 10) {
 		[self addColumn:self];
 		i++;
 	}
 	
 	// Add 10 rows
 	int j = 0;
-	while (j < 10) {
+	while (j < 100) {
 		[self addRow:self];
 		j++;
 	}
@@ -185,7 +185,7 @@
 	NSMutableArray *column = [[NSMutableArray alloc] init];
 	
 	// Default number of rows
-	NSUInteger numberOfRows = 5;
+	NSUInteger numberOfRows = 0;
 	
 	// If there are already other columns, get the number of rows from one of them
 	if ([columns count] > 0) {

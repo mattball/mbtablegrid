@@ -24,7 +24,9 @@
  */
 
 #import "MBTableGridContentView.h"
+
 #import "MBTableGrid.h"
+#import "MBTableGridCell.h"
 
 @interface MBTableGrid (Private)
 - (id)_objectValueForColumn:(NSUInteger)columnIndex row:(NSUInteger)rowIndex;
@@ -68,12 +70,18 @@
 		cursorImage = [[self _cellSelectionCursorImage] retain];
 		
 		isDraggingColumnOrRow = NO;
+		
+		_cell = [[MBTableGridCell alloc] initTextCell:@""];
+		[_cell setBezeled:YES];
+		[_cell setScrollable:YES];
+		[_cell setLineBreakMode:NSLineBreakByTruncatingTail];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	[_cell release];
 	[cursorImage release];
 	[super dealloc];
 }
@@ -83,20 +91,47 @@
 	NSUInteger numberOfColumns = [[self tableGrid] numberOfColumns];
 	NSUInteger numberOfRows = [[self tableGrid] numberOfRows];
 	
-	NSTextFieldCell *cell = [[self tableGrid] cell];
+	NSUInteger firstColumn = NSNotFound;
+	NSUInteger lastColumn = NSNotFound;
+	NSUInteger firstRow = NSNotFound;
+	NSUInteger lastRow = NSNotFound;
 	
+	// Find the columns to draw
 	NSUInteger column = 0;
-	while(column < numberOfColumns) {
-		NSUInteger row = 0;
-		while(row < numberOfRows) {
+	while (column < numberOfColumns) {
+		NSRect columnRect = [self rectOfColumn:column];
+		if (firstColumn == NSNotFound && NSMinX([self visibleRect]) >= NSMinX(columnRect) && NSMinX([self visibleRect]) <= NSMaxX(columnRect)) {
+			firstColumn = column;
+		} else if (firstColumn != NSNotFound && NSMaxX([self visibleRect]) >= NSMinX(columnRect) && NSMaxX([self visibleRect]) <= NSMaxX(columnRect)) {
+			lastColumn = column;
+			break;
+		}
+		column++;
+	}
+	
+	// Find the rows to draw
+	NSUInteger row = 0;
+	while (row < numberOfRows) {
+		NSRect rowRect = [self rectOfRow:row];
+		if (firstRow == NSNotFound && NSMinY([self visibleRect]) >= rowRect.origin.x && NSMinY([self visibleRect]) <= NSMaxY(rowRect)) {
+			firstRow = row;
+		} else if (firstRow != NSNotFound && NSMaxY([self visibleRect]) >= NSMinY(rowRect) && NSMaxY([self visibleRect]) <= NSMaxY(rowRect)) {
+			lastRow = row;
+			break;
+		}
+		row++;
+	}	
+	
+	column = firstColumn;
+	while (column <= lastColumn) {
+		row = firstRow;
+		while (row <= lastRow) {
 			NSRect cellFrame = [self frameOfCellAtColumn:column row:row];
 			
 			// Only draw the cell if we need to
 			if ([self needsToDrawRect:cellFrame]) {
-				// Get the value for the cell
-				[cell setObjectValue:[[self tableGrid] _objectValueForColumn:column row:row]];		
-				
-				[cell drawWithFrame:cellFrame inView:self];
+				[_cell setObjectValue:[[self tableGrid] _objectValueForColumn:column row:row]];
+				[_cell drawWithFrame:cellFrame inView:self];
 			}
 			row++;
 		}
@@ -123,7 +158,7 @@
 		
 		NSColor *selectionColor = [NSColor alternateSelectedControlColor];
 		
-		// If the view is the first responder, the use a gray selection color
+		// If the view is not the first responder, the use a gray selection color
 		NSResponder *firstResponder = [[self window] firstResponder];
 		if (![[firstResponder class] isSubclassOfClass:[NSView class]] || ![(NSView *)firstResponder isDescendantOf:[self tableGrid]] || ![[self window] isKeyWindow]) {
 			selectionColor = [[selectionColor colorUsingColorSpaceName:NSDeviceWhiteColorSpace] colorUsingColorSpaceName:NSDeviceRGBColorSpace];
@@ -446,6 +481,7 @@
 - (NSRect)rectOfColumn:(NSUInteger)columnIndex
 {
 	NSRect rect = NSMakeRect(0, 0, 60, [self frame].size.height);
+	//rect.origin.x += 60.0 * columnIndex;
 	
 	NSUInteger i = 0;
 	while(i < columnIndex) {
@@ -462,12 +498,14 @@
 	float heightForRow = 20.0;
 	NSRect rect = NSMakeRect(0, 0, [self frame].size.width, heightForRow);
 	
-	NSUInteger i = 0;
+	rect.origin.y += 20.0 * rowIndex;
+	
+	/*NSUInteger i = 0;
 	while(i < rowIndex) {
 		float rowHeight = rect.size.height;
 		rect.origin.y += rowHeight;
 		i++;
-	}
+	}*/
 	
 	return rect;
 }

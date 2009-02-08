@@ -151,7 +151,6 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				C94131F10D8E2C8500E9E614 /* Generate Documentation */,
 			);
 			buildRules = (
 			);
@@ -191,23 +190,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		C94131F10D8E2C8500E9E614 /* Generate Documentation */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Generate Documentation";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#rm -R ../Documentation/xml\n#rm -R ../Documentation/xhtml\n\n/Applications/Doxygen.app/Contents/Resources/doxygen ../Documentation/Doxyfile\n\n#/Users/matt/Documents/Programming/DoxyClean/doxyclean.py -h -i ../Documentation/xml -o ../Documentation\n\n#rm -R ../Documentation/xml\n\n#mv ../Documentation/DoxyCleaned/* ../Documentation/\n\n#rm -R ../Documentation/DoxyCleaned";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
