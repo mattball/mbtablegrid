@@ -35,14 +35,14 @@
 {
 	columns = [[NSMutableArray alloc] initWithCapacity:500];
 	
-	// Add 5 columns
+	// Add 10 columns
 	int i = 0;
 	while (i < 10) {
 		[self addColumn:self];
 		i++;
 	}
 	
-	// Add 10 rows
+	// Add 100 rows
 	int j = 0;
 	while (j < 100) {
 		[self addRow:self];

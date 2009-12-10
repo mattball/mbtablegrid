@@ -92,9 +92,9 @@
 	NSUInteger numberOfRows = [[self tableGrid] numberOfRows];
 	
 	NSUInteger firstColumn = NSNotFound;
-	NSUInteger lastColumn = NSNotFound;
+	NSUInteger lastColumn = numberOfColumns - 1;
 	NSUInteger firstRow = NSNotFound;
-	NSUInteger lastRow = NSNotFound;
+	NSUInteger lastRow = numberOfRows - 1;
 	
 	// Find the columns to draw
 	NSUInteger column = 0;
