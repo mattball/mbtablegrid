@@ -353,6 +353,7 @@
 - (void)mouseUp:(NSEvent *)theEvent
 {
 	[autoscrollTimer invalidate];
+	autoscrollTimer = nil;
 	
 	mouseDownColumn = NSNotFound;
 	mouseDownRow = NSNotFound;
@@ -413,6 +414,7 @@
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
 	[autoscrollTimer invalidate];
+	autoscrollTimer = nil;
 	
 	[[self tableGrid] draggingExited:sender];
 }
